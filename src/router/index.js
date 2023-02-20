@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import SignUp from '../views/SignUp.vue';
 import { useRouter } from 'vue-router';
+import login from "../views/Login.vue";
 
 const isAuthenticated = () => !!localStorage.getItem("token");
 
@@ -9,14 +10,8 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "sign-up",
-      component: SignUp,
-      beforeEnter: (to, from) => {
-        if (isAuthenticated()) {
-          router.push({name: "Restaurants"})
-        }
-
-      },
+      name: "home",
+      component: () => import("@/views/Home.vue"),
     },
     {
       path: "/Restaurants",
@@ -24,7 +19,27 @@ const router = createRouter({
       component: () => import("@/views/Restaurants.vue"),
       beforeEnter: (to, from) => {
         if (!isAuthenticated()) {
-          router.push({name: "sign-up"})
+          router.push({ name: "sign-up" });
+        }
+      },
+    },
+    {
+      path: "/signup",
+      name: "sign-up",
+      component: SignUp,
+      beforeEnter: (to, from) => {
+        if (isAuthenticated()) {
+          router.push({ name: "Restaurants" });
+        }
+      },
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: login,
+      beforeEnter: (to, from) => {
+        if (isAuthenticated()) {
+          router.push({name: "home"})
         }
       }
     },

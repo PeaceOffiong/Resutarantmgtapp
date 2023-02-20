@@ -10,6 +10,7 @@
     <h3>Sign Up</h3>
     <form @submit.prevent="handleSubmit">
       <input type="text" placeholder="Enter Name" v-model="name" />
+      <small v-show="alert.email.truthValue">{{ alert.email.message }}</small>
       <input type="email" placeholder="Enter Email" v-model="email" />
       <small v-show="alert.password.truthValue">{{
         alert.password.message
@@ -36,6 +37,7 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import services from "../services/index";
 
 const name = ref("");
 const email = ref("");
@@ -53,31 +55,42 @@ const alert = reactive({
     message: "",
     truthValue: false,
   },
+  email: {
+    message: "",
+    truthValue: false,
+  },
 });
 
 const handleSubmit = () => {
-    if (confirmPassword.value !== password.value) {
-        alert.password.message = "password does not align";
-        alert.confirmPassword.message = "please input password again";
-        alert.password.truthValue = true;
-        alert.confirmPassword.truthValue = true;
-    }
+  if (confirmPassword.value !== password.value) {
+    alert.password.message = "password does not align";
+    alert.confirmPassword.message = "please input password again";
+    alert.password.truthValue = true;
+    alert.confirmPassword.truthValue = true;
+  }
 
-    const tokens = {
-        name: name.value,
-        password:password.value
+  const tokens = {
+    name: name.value,
+    email: email.value,
+    password: password.value,
+  };
+  services.updateUsers(tokens).then((response) => {
+    if (response.data === "email already exists") {
+      alert.email.message = "Email is already associated with another account";
+      alert.email.truthValue = true;
+    } else if (response.data === "successful bitches") {
+      localStorage.setItem("token", tokens);
+      router.push({ name: "Restaurants" });
+      password.value = "";
+      name.value = "";
+      email.value = "";
+      confirmPassword.value = "";
     }
-    localStorage.setItem("token", tokens);
-    router.push({name:"Restaurants"})
-    
-    password.value = "";
-    name.value = "";
-    email.value = "";
-    confirmPassword.value = "";
+  });
 };
 </script>
 
-<style scoped>
+<style>
 small {
   color: red;
 }

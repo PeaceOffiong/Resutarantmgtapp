@@ -1,11 +1,13 @@
 <template>
-    <SignUp/>
+  <SignUp />
 </template>
 
-<script setup>
-import SignUp from '../components/SignUp.vue';
-
+<script>
+import SignUp from "../components/SignUp.vue";
+export default {
+  components: { SignUp },
+  setup() {},
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
