@@ -8,6 +8,12 @@ const updateUsers = (content) => {
   );
 };
 
+const fetchData = () => {
+  const response = fetch(USER_URL);
+  return response.then(response => response.json());
+}
+
 export default {
   updateUsers,
+  fetchData,
 };

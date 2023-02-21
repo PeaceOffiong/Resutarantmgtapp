@@ -31,6 +31,7 @@
         :disabled="name && email && password && confirmPassword === ''"
       />
     </form>
+    <p>You already have an account? <RouterLink to="/login">Login</RouterLink></p>
   </section>
 </template>
 
